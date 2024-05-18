@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { getAllCountries } from '../../Utils/api'
+import { getAllCountries } from '../Utils/api'
 
 function CountrySelect() {
   const [countries, setCountries] = useState([]);

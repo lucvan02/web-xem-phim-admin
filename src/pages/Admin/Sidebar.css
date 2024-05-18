@@ -1,0 +1,84 @@
+/* 
+.sidebar {
+    height: 100%;
+    width: 250px;
+    position: fixed;
+    top: 0;
+    left: 0;
+    background-color: #333;
+    padding-top: 20px;
+    font-weight: bold;
+  }
+
+  .sidebar h2{
+    color: #5751cf;
+    text-align: center;
+  }
+  
+  
+  .sidebar a {
+    padding: 10px;
+    text-decoration: none;
+    font-size: 18px;
+    color: #fff;
+    display: block;
+    transition: 0.3s;
+  }
+  
+
+  .sidebar a:hover {
+    background-color: #555;
+  } */
+
+
+
+
+
+
+
+
+
+  /* Style for the sidebar */
+.sidebar {
+    height: 100%;
+    width: 250px;
+    position: fixed;
+    top: 0;
+    left: 0;
+    background-color: #333;
+    padding-top: 20px;
+    font-weight: bold;
+  }
+  
+  .sidebar h2 {
+    color: #3378e8;
+    text-align: center;
+  }
+  
+  /* Style for sidebar links */
+  .sidebar a {
+    padding: 10px;
+    text-decoration: none;
+    font-size: 18px;
+    color: #fff;
+    display: block;
+    transition: 0.3s;
+    display: flex;
+    align-items: center;
+  }
+  
+  .sidebar a svg {
+    margin-right: 10px;
+  }
+  
+  /* Change color on hover */
+  .sidebar a:hover {
+    background-color: #555;
+  }
+  
+  /* Style for active link */
+  .sidebar a.active {
+    background-color: #3378e8;
+    color: #fff;
+  }
+  

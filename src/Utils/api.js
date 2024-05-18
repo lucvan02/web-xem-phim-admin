@@ -28,7 +28,48 @@ const createAxiosRequest = async (method, url, data = null) => {
 };
 
 
-//dang nhap
+// //dang nhap
+// export const login = async (username, password, email) => {
+//     try {
+//         const response = await axios.post('/api/login/signin', { username, password, email });
+//         const responseData = response.data;
+
+//         if (responseData.success) {
+//             const token = responseData.data;
+//             setAuthHeader(token);
+
+//             const decodedToken = jwtDecode(token);
+//             const expiration = decodedToken.exp;
+//             localStorage.setItem('tokenExpiration', expiration);
+
+//             return responseData;
+//         } else {
+//             throw new Error('Invalid credentials');
+//         }
+//     } catch (error) {
+//         console.error('Login Error:', error);
+//         throw error;
+//     }
+// };
+
+// export const isLoggedIn = () => {
+//     const token = localStorage.getItem('token');
+//     if (!token) return false;
+
+//     const decodedToken = jwtDecode(token);
+//     const tokenExpiration = decodedToken.exp * 1000;
+//     const currentTime = Date.now();
+    
+//     return currentTime <= tokenExpiration;
+// };
+
+
+
+
+
+
+
+
 export const login = async (username, password, email) => {
     try {
         const response = await axios.post('/api/login/signin', { username, password, email });
@@ -38,29 +79,129 @@ export const login = async (username, password, email) => {
             const token = responseData.data;
             setAuthHeader(token);
 
+            // Giải mã token để lấy thông tin người dùng
             const decodedToken = jwtDecode(token);
-            const expiration = decodedToken.exp;
-            localStorage.setItem('tokenExpiration', expiration);
+            const id = decodedToken.sub;
+
+            // Gọi hàm getUserInfo để lấy thông tin người dùng từ id
+            const userInfo = await getUserInfo(id);
+
+            // Kiểm tra quyền admin
+            if (userInfo.role == 'ADMIN') {
+                throw new Error('User is authorized');
+            }
+
+            // Lưu token và thông tin người dùng vào localStorage
+            localStorage.setItem('token', token);
+            localStorage.setItem('userInfo', JSON.stringify(userInfo));
 
             return responseData;
         } else {
-            throw new Error('Invalid credentials');
+            throw new Error('Invalid credentials'); // Xử lý lỗi đăng nhập không hợp lệ
         }
     } catch (error) {
         console.error('Login Error:', error);
         throw error;
     }
-};
+}
+
 
 export const isLoggedIn = () => {
     const token = localStorage.getItem('token');
-    if (!token) return false;
-
-    const decodedToken = jwtDecode(token);
-    const tokenExpiration = decodedToken.exp * 1000;
-    const currentTime = Date.now();
     
-    return currentTime <= tokenExpiration;
+    if (!token) {
+        return false;
+    }
+
+    const decodedToken = jwtDecode(token); // Giải mã token để lấy thông tin payload
+    const tokenExpiration = decodedToken.exp * 1000; // Chuyển giây thành mili-giây
+
+    const currentTime = Date.now();
+    if (currentTime > tokenExpiration) {
+        return false;
+    }
+
+    return true;
+};
+
+
+export const getUserInfo = async () => {
+    try {
+        const token = getAuthToken();
+        const decodedToken = jwtDecode(token);
+        const id = decodedToken.sub;
+
+        const response = await axios.get(`/api/admin/movie-user/${id}`, {
+            headers: {
+                'Authorization': `Bearer ${token}`,
+                'Content-Type': 'application/json'
+            }
+        });
+        return response.data.data;
+    } catch (error) {
+        console.error('Error fetching user info:', error);
+        throw error;
+    }
+};
+
+export const uploadUserAvatar = async (formData) => {
+    try {
+      const response = await axios.post(`/api/admin/movie-user/upload`, formData, {
+        headers: {
+          'Authorization': `Bearer ${getAuthToken()}`,
+          'Content-Type': 'multipart/form-data'
+        }
+      });
+
+      // Cập nhật lại thông tin người dùng trong localStorage
+      const token = getAuthToken();
+      const userInfo = await getUserInfo(token);
+      localStorage.setItem('userInfo', JSON.stringify(userInfo));
+  
+      return response.data.data;
+    } catch (error) {
+      throw error;
+    }
+  };
+
+// export const uploadUserAvatar = async (file, username) => {
+//     try {
+//         const formData = new FormData();
+//         formData.append('fileUpload', file);
+//         formData.append('username', username);
+
+//         const response = await axios.post(`/api/user/upload`, formData, {
+//             headers: {
+//                 'Authorization': `Bearer ${getAuthToken()}`,
+//                 'Content-Type': 'multipart/form-data'
+//             }
+//         });
+
+//         return response.data.data;
+//     } catch (error) {
+//         throw error;
+//     }
+// };
+
+
+export const updateUserInfo = async (username, userData) => {
+    try {
+        const response = await axios.put(`/api/admin/movie-user/update`, { ...userData, username }, {
+            headers: {
+                'Authorization': `Bearer ${getAuthToken()}`,
+                'Content-Type': 'application/json'
+            }
+        });
+
+        // Cập nhật lại thông tin người dùng trong localStorage
+        const token = getAuthToken();
+        const userInfo = await getUserInfo(token);
+        localStorage.setItem('userInfo', JSON.stringify(userInfo));
+
+        return response.data.data;
+    } catch (error) {
+        throw error;
+    }
 };
 
 

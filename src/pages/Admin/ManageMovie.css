@@ -1,34 +1,4 @@
-/* Style for the sidebar */
-.sidebar {
-    height: 100%;
-    width: 250px;
-    position: fixed;
-    top: 0;
-    left: 0;
-    background-color: #333;
-    padding-top: 20px;
-    font-weight: bold;
-  }
 
-  .sidebar h2{
-    color: #5751cf;
-    text-align: center;
-  }
-  
-  /* Style for sidebar links */
-  .sidebar a {
-    padding: 10px;
-    text-decoration: none;
-    font-size: 18px;
-    color: #fff;
-    display: block;
-    transition: 0.3s;
-  }
-  
-  /* Change color on hover */
-  .sidebar a:hover {
-    background-color: #555;
-  }
   
   /* Style for main content */
   .main-content {
@@ -144,6 +114,28 @@
 
 
 
+.table-container {
+  max-height: 500px; /* Adjust the height as needed */
+  overflow-y: auto;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+th {
+  background-color: #333;
+  color: #fff;
+  padding: 10px;
+  position: sticky;
+  top: 0;
+}
+
+td {
+  border: 1px solid #ddd;
+  padding: 10px;
+}
 
 
 
