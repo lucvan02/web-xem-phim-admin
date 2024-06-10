@@ -1,9 +1,8 @@
 
-  
-  /* Style for main content */
   .main-content {
     margin-left: 250px; /* Same width as the sidebar */
     padding: 20px;
+    /* background-color: #888; */
   }
   
   /* Style for the table */

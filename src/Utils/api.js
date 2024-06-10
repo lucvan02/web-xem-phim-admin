@@ -293,18 +293,27 @@ export const deleteMovie = async (movieId) => createAxiosRequest('DELETE', `/api
 export const addEpisode = async (episodeData) => createAxiosRequest('POST', '/api/admin/episode/create', episodeData);
 export const updateEpisode = async (episodeId, newData) => createAxiosRequest('PUT', `/api/admin/episode/update?id=${episodeId}`, newData);
 export const deleteEpisode = async (episodeId) => createAxiosRequest('DELETE', `/api/admin/episode/delete?id=${episodeId}`);
-export const uploadEpisode = async (file, id) => {
-    const formData = new FormData();
-    formData.append('fileUpload', file);
-    formData.append('id', id);
-    return createAxiosRequest('POST', '/api/admin/episode/upload', formData);
+export const getEpisodeDetail = async (episodeId) => createAxiosRequest('GET', `/api/admin/episode/${episodeId}`);
+// export const uploadEpisodeVideo = async (file, id) => {
+//     const formData = new FormData();
+//     formData.append('fileUpload', file);
+//     formData.append('id', id);
+//     return createAxiosRequest('POST', '/api/admin/episode/upload', formData);
+// };
+export const uploadEpisodeVideo = async (formData) => {
+    try {
+        const response = await axios.post(`/api/admin/episode/upload`, formData, {
+            headers: {
+                'Authorization': `Bearer ${getAuthToken()}`,
+                'Content-Type': 'multipart/form-data'
+            }
+        });
+        return response.data.data;
+    } catch (error) {
+        throw error;
+    }
 };
-export const uploadEpisodeVideo = async (file, id) => {
-    const formData = new FormData();
-    formData.append('fileUpload', file);
-    formData.append('id', id);
-    return createAxiosRequest('POST', '/api/admin/episode/upload', formData);
-};
+
 
 // export const uploadEpisode = async (file, id) => {
 //     try {

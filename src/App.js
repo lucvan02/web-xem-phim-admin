@@ -9,10 +9,10 @@ function App() {
   useEffect(() => {
     const currentPath = window.location.pathname;
     // Kiểm tra nếu không phải trang login
-    if (currentPath !== '/login' && !isLoggedIn()) {
+    if (currentPath !== '/admin/login' && !isLoggedIn()) {
     // Nếu người dùng chưa đăng nhập và không phải trang login, chuyển hướng họ đến trang đăng nhập
       window.alert('Phiên đăng nhập đã hết hạn. Mời đăng nhập lại.');
-      window.location.href = '/login';
+      window.location.href = '/admin/login';
     }
   }, []);
 
