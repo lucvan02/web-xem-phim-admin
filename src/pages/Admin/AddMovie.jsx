@@ -58,8 +58,8 @@ const AddMovie = ({ fetchMovies }) => {
 
   const handleAddMovie = async () => {
     try {
-      const personIds = newMovie.persons.map(person => person.personId);
-      const categoryIds = newMovie.categories.map(category => category.categoryId);
+      const personIds = newMovie.persons.map(personId => ({ personId }));
+      const categoryIds = newMovie.categories.map(categoryId => ({ categoryId }));
 
       const movieData = {
         ...newMovie,
@@ -171,7 +171,7 @@ const AddMovie = ({ fetchMovies }) => {
             <label>Quốc gia</label>
             <select
               value={newMovie.countryId}
-              onChange={(e) => setNewMovie({ ...newMovie, countryId: e.target.value })}
+              onChange={(e) => setNewMovie({ ...newMovie, countryId: parseInt(e.target.value) })}
             >
               {countries.map(country => (
                 <option key={country.countryId} value={country.countryId}>{country.name}</option>
@@ -206,7 +206,7 @@ const AddMovie = ({ fetchMovies }) => {
             <label>Giá mua</label>
             <input
               type="number"
-              placeholder="Lịch chiếu"
+              placeholder="Giá mua"
               value={newMovie.price}
               onChange={(e) => setNewMovie({ ...newMovie, price: e.target.value })}
             />

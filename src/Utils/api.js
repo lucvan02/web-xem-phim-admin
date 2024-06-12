@@ -13,7 +13,8 @@ export const setAuthHeader = (token) => {
     }
 };
 
-axios.defaults.baseURL = 'http://localhost';
+// axios.defaults.baseURL = 'http://localhost';
+axios.defaults.baseURL = 'http://localhost:8080';
 axios.defaults.headers.post['Content-Type'] = 'application/json';
 
 const createAxiosRequest = async (method, url, data = null) => {
@@ -193,6 +194,8 @@ export const uploadPersonImage = async (formData) => {
 
 //phim
 export const addMovie = async (movieData) => createAxiosRequest('POST', '/api/admin/movie/create', movieData);
+export const updateMovie = async (movieId, newData) => createAxiosRequest('PUT', `/api/admin/movie/update/${movieId}`, newData);
+export const deleteMovie = async (movieId) => createAxiosRequest('DELETE', `/api/admin/movie/delete?id=${movieId}`);
 export const uploadMovieImage = async (formData) => {
     try {
       const response = await axios.post(`/api/admin/movie/upload`, formData, {
@@ -208,17 +211,11 @@ export const uploadMovieImage = async (formData) => {
     }
   };
 
-
-export const updateMovie = async (movieId, newData) => createAxiosRequest('PUT', `/api/admin/movie/update?id=${movieId}`, newData);
-export const deleteMovie = async (movieId) => createAxiosRequest('DELETE', `/api/admin/movie/delete?id=${movieId}`);
-
-
 //tap phim
 export const addEpisode = async (episodeData) => createAxiosRequest('POST', '/api/admin/episode/create', episodeData);
 export const updateEpisode = async (episodeId, newData) => createAxiosRequest('PUT', `/api/admin/episode/update?id=${episodeId}`, newData);
 export const deleteEpisode = async (episodeId) => createAxiosRequest('DELETE', `/api/admin/episode/delete?id=${episodeId}`);
 export const getEpisodeDetail = async (episodeId) => createAxiosRequest('GET', `/api/admin/episode/${episodeId}`);
-
 export const uploadEpisodeVideo = async (formData) => {
     try {
         const response = await axios.post(`/api/admin/episode/upload`, formData, {
