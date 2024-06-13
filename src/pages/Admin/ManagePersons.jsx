@@ -56,22 +56,8 @@ const ManagePersons = () => {
     }
   };
 
-  const handleUpdatePerson = async () => {
-    try {
-      if (editPerson) {
-        await updatePerson(editPerson.personId, editPerson);
-        fetchPersons();
-        setEditPerson(null);
-      } else {
-        console.error('No person to update');
-      }
-    } catch (error) {
-      console.error('Error updating person:', error);
-    }
-  };
-
   const handleDeletePerson = async (id) => {
-    if (window.confirm('Are you sure you want to delete this person?')) {
+    if (window.confirm('Bạn có chắc muốn xoá người này?')) {
       try {
         await deletePerson(id);
         fetchPersons();
@@ -116,7 +102,7 @@ const ManagePersons = () => {
     try {
       if (editPerson) {
         await updatePerson(editPerson.personId, editPerson);
-        // Upload image to server if a new image is selected
+        
         if (newImage) {
           await uploadImage(editPerson.personId);
         }

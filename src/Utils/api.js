@@ -13,8 +13,8 @@ export const setAuthHeader = (token) => {
     }
 };
 
-// axios.defaults.baseURL = 'http://localhost';
-axios.defaults.baseURL = 'http://localhost:8080';
+axios.defaults.baseURL = 'http://localhost';
+// axios.defaults.baseURL = 'http://localhost:8080';
 axios.defaults.headers.post['Content-Type'] = 'application/json';
 
 const createAxiosRequest = async (method, url, data = null) => {
@@ -194,7 +194,19 @@ export const uploadPersonImage = async (formData) => {
 
 //phim
 export const addMovie = async (movieData) => createAxiosRequest('POST', '/api/admin/movie/create', movieData);
-export const updateMovie = async (movieId, newData) => createAxiosRequest('PUT', `/api/admin/movie/update/${movieId}`, newData);
+export const updateMovie = async (movieData) => {
+    try {
+        const response = await axios.put(`/api/admin/movie/update`, movieData, {
+            headers: {
+                'Authorization': `Bearer ${getAuthToken()}`,
+                'Content-Type': 'application/json'
+            }
+        });
+        return response.data.data;
+    } catch (error) {
+        throw error;
+    }
+};
 export const deleteMovie = async (movieId) => createAxiosRequest('DELETE', `/api/admin/movie/delete?id=${movieId}`);
 export const uploadMovieImage = async (formData) => {
     try {
@@ -213,7 +225,20 @@ export const uploadMovieImage = async (formData) => {
 
 //tap phim
 export const addEpisode = async (episodeData) => createAxiosRequest('POST', '/api/admin/episode/create', episodeData);
-export const updateEpisode = async (episodeId, newData) => createAxiosRequest('PUT', `/api/admin/episode/update?id=${episodeId}`, newData);
+// export const updateEpisode = async (episodeId, newData) => createAxiosRequest('PUT', `/api/admin/episode/update?id=${episodeId}`, newData);
+export const updateEpisode = async (episodeData) => {
+    try {
+        const response = await axios.put(`/api/admin/episode/update`, episodeData, {
+            headers: {
+                'Authorization': `Bearer ${getAuthToken()}`,
+                'Content-Type': 'application/json'
+            }
+        });
+        return response.data.data;
+    } catch (error) {
+        throw error;
+    }
+};
 export const deleteEpisode = async (episodeId) => createAxiosRequest('DELETE', `/api/admin/episode/delete?id=${episodeId}`);
 export const getEpisodeDetail = async (episodeId) => createAxiosRequest('GET', `/api/admin/episode/${episodeId}`);
 export const uploadEpisodeVideo = async (formData) => {

@@ -309,12 +309,14 @@ const ManageMovies = () => {
   };
 
   const handleDelete = async (movieId) => {
+    if (window.confirm('Bạn có chắc muốn xoá phim này?')) {
     try {
       await deleteMovie(movieId);
       fetchMovies();
     } catch (error) {
       console.error('Error deleting movie:', error);
     }
+  }
   };
 
   return (
@@ -374,6 +376,26 @@ const ManageMovies = () => {
 };
 
 export default ManageMovies;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

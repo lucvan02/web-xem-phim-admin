@@ -4,6 +4,7 @@ import { getMovieDetail, updateMovie, getAllCountries, getAllPersons, getAllCate
 import './EditMovie.css';
 import Sidebar from './Sidebar';
 import ManageEpisodes from './ManageEpisodes';
+import { Button } from 'bootstrap';
 
 const EditMovie = () => {
   const { movieId } = useParams();
@@ -12,10 +13,10 @@ const EditMovie = () => {
   const [error, setError] = useState(null);
   const [editMode, setEditMode] = useState(false);
   const [formData, setFormData] = useState({});
-  const [file, setFile] = useState(null);
   const [countries, setCountries] = useState([]);
   const [persons, setPersons] = useState([]);
   const [categories, setCategories] = useState([]);
+  const [newImage, setNewImage] = useState(null);
 
   useEffect(() => {
     const fetchMovieDetail = async () => {
@@ -23,16 +24,17 @@ const EditMovie = () => {
         const movieDetail = await getMovieDetail(movieId);
         setMovie(movieDetail);
         setFormData({
+          // movieId: movieDetail.movieId,
           name: movieDetail.name,
           image: movieDetail.image,
           episodes: movieDetail.episodes,
           movieSchedule: movieDetail.movieSchedule,
-          country: movieDetail.country.countryId, // Chỉ lấy ID của quốc gia
+          country: movieDetail.country.countryId,
           star: movieDetail.star,
           price: movieDetail.price,
           views: movieDetail.views,
-          categories: movieDetail.categories.map(category => category.categoryId), // Chỉ lấy ID của thể loại
-          persons: movieDetail.persons.map(person => person.personId), // Chỉ lấy ID của diễn viên
+          categories: movieDetail.categories.map(category => category.categoryId),
+          persons: movieDetail.persons.map(person => person.personId),
           episodeList: movieDetail.episodeList,
           movieContent: movieDetail.movieContent
         });
@@ -76,28 +78,27 @@ const EditMovie = () => {
     }
   };
 
-  const handleFileChange = (e) => {
-    setFile(e.target.files[0]);
+  const handleImageChange = (e) => {
+    setNewImage(e.target.files[0]);
   };
 
-  const handleUploadMovieImage = async () => {
-    if (!file) {
-      alert('Please select a file.');
+  const handleUploadMovieImage = async (idmovie) => {
+    if (!idmovie) {
+      alert('ID phim không hợp lệ');
       return;
     }
     try {
-      await uploadMovieImage(file, movieId);
-      const updatedMovie = await getMovieDetail(movieId);
-      setMovie(updatedMovie);
-      setFormData({
-        ...formData,
-        image: updatedMovie.image
-      });
-      alert('Movie image uploaded successfully!');
+      const formDataUpImg = new FormData();
+      formDataUpImg.append('fileUpload', newImage);
+      formDataUpImg.append('id', idmovie);
+      await uploadMovieImage(formDataUpImg);
+      
     } catch (error) {
-      alert('Error uploading movie image');
+      alert('Lỗi tải ảnh lên, hãy thử lại sau!');
     }
   };
+  
+  
 
   const handleEditToggle = () => {
     setEditMode(!editMode);
@@ -106,27 +107,36 @@ const EditMovie = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
+      const personIds = formData.persons.map(personId => ({ personId }));
+      const categoryIds = formData.categories.map(categoryId => ({ categoryId }));
+  
       const updatedData = {
+        movieId: movieId,
         name: formData.name,
         episodes: formData.episodes,
         movieSchedule: formData.movieSchedule,
-        countryId: formData.country, // Truyền ID của quốc gia
+        countryId: formData.country,
         star: formData.star,
         price: formData.price,
         views: formData.views,
-        categories: formData.categories, // Truyền ID của thể loại
-        persons: formData.persons, // Truyền ID của diễn viên
-        movieContent: formData.movieContent
+        status: 1,
+        movieContent: formData.movieContent,
+        persons: personIds,
+        categories: categoryIds
       };
-      await updateMovie(movieId, updatedData);
-      alert('Movie updated successfully!');
+      await updateMovie(updatedData);
+      if (newImage) {
+        await handleUploadMovieImage(movieId);
+      }
+      alert('Đã sửa phim!');
       setEditMode(false);
-      const updatedMovie = await getMovieDetail(movieId);
+      const updatedMovie = await getMovieDetail(updatedData.movieId);
       setMovie(updatedMovie);
     } catch (error) {
-      alert('Error updating movie');
+      alert('Lỗi sửa phim, hãy thử lại sau!');
     }
   };
+  
 
   if (loading) {
     return <div className="loading">Loading...</div>;
@@ -184,17 +194,17 @@ const EditMovie = () => {
           </div>
         </div>
         <p className="content">Mô tả: {movie.movieContent}</p>
-        <div>
-          <p>Diễn viên:</p>
-          <div style={{ display: 'flex', flexWrap: 'wrap' }}>
-            {movie.persons.map(person => (
-              <div key={person.personId} style={{ margin: '10px', textAlign: 'center' }}>
-                <img src={`${process.env.REACT_APP_UPLOAD_URL}/${person.image}`} alt={person.name} style={{ width: '100px', height: '100px', objectFit: 'cover', borderRadius: '50%' }} />
-                <span style={{ display: 'block', marginTop: '5px' }}>{person.name}</span>
-              </div>
-            ))}
-          </div>
+      <div>
+        <p>Diễn viên:</p>
+        <div style={{ display: 'flex', flexWrap: 'wrap' }}>
+          {movie.persons.map(person => (
+            <div key={person.personId} style={{ margin: '10px', textAlign: 'center' }}>
+              <img src={`${process.env.REACT_APP_UPLOAD_URL}/${person.image}`} alt={person.name} style={{ width: '100px', height: '100px', objectFit: 'cover', borderRadius: '50%' }} />
+              <span style={{ display: 'block', marginTop: '5px' }}>{person.name}</span>
+            </div>
+          ))}
         </div>
+      </div>
         <button onClick={handleEditToggle}>{editMode ? 'Huỷ' : 'Sửa'}</button>
         {editMode && (
           <form onSubmit={handleSubmit}>
@@ -202,11 +212,14 @@ const EditMovie = () => {
               <label htmlFor="name">Name:</label>
               <input type="text" id="name" value={formData.name} onChange={(e) => setFormData({ ...formData, name: e.target.value })} />
             </div>
-            {/* <div className="form-group">
-              <label htmlFor="image">Ảnh:</label>
-              <input type="file" id="image" onChange={handleFileChange} />
-              <button type="button" onClick={handleUploadMovieImage}>Upload Movie Image</button>
-            </div> */}
+
+            <div className="form-group">
+              <label>Chọn ảnh</label>
+              <input
+                type="file"
+                onChange={handleImageChange}
+              />
+          </div>
             <div className="form-group">
               <label htmlFor="episodes">Số tập:</label>
               <input type="number" id="episodes" value={formData.episodes} onChange={(e) => setFormData({ ...formData, episodes: e.target.value })} />
