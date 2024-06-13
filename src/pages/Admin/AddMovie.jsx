@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { getAllCountries, getAllPersons, getAllCategories, addMovie, uploadMovieImage } from '../../Utils/api';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faFilm, faList, faGlobe, faUsers, faSignOutAlt } from '@fortawesome/free-solid-svg-icons';
 import './AddMovie.css';
 
 const AddMovie = ({ fetchMovies }) => {
@@ -124,7 +126,7 @@ const AddMovie = ({ fetchMovies }) => {
       <form className="add-movie-form">
         <div className="form-column">
           <div className="form-group">
-            <label>Tên phim</label>
+            <label>Tên phim<FontAwesomeIcon icon={faFilm} /></label>
             <input
               type="text"
               placeholder="Tên phim"
@@ -168,7 +170,7 @@ const AddMovie = ({ fetchMovies }) => {
         </div>
         <div className="form-column">
           <div className="form-group">
-            <label>Quốc gia</label>
+            <label>Quốc gia<FontAwesomeIcon icon={faGlobe} /></label>
             <select
               value={newMovie.countryId}
               onChange={(e) => setNewMovie({ ...newMovie, countryId: parseInt(e.target.value) })}
@@ -179,7 +181,7 @@ const AddMovie = ({ fetchMovies }) => {
             </select>
           </div>
           <div className="form-group">
-            <label>Diễn viên</label>
+            <label>Diễn viên<FontAwesomeIcon icon={faUsers} /></label>
             <select
               value={newMovie.persons}
               onChange={(e) => setNewMovie({ ...newMovie, persons: Array.from(e.target.selectedOptions, option => parseInt(option.value)) })}
@@ -191,7 +193,7 @@ const AddMovie = ({ fetchMovies }) => {
             </select>
           </div>
           <div className="form-group">
-            <label>Thể loại</label>
+            <label>Thể loại<FontAwesomeIcon icon={faList} /></label>
             <select
               value={newMovie.categories}
               onChange={(e) => setNewMovie({ ...newMovie, categories: Array.from(e.target.selectedOptions, option => parseInt(option.value)) })}

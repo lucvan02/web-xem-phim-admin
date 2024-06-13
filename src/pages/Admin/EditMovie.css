@@ -1,7 +1,8 @@
 .movie-detail {
     margin: 0 auto;
     padding: 20px;
-    font-weight: bold;
+    font-weight: 500;
+    background: #85909057;
   }
   
   .title {
@@ -206,3 +207,80 @@
 
 
 
+/* Edit form styles */
+.edit-form-container {
+  background-color: #f9f9f9;
+  border-radius: 8px;
+  padding: 20px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  margin-top: 20px;
+}
+
+.edit-form {
+  display: flex;
+  flex-direction: column;
+}
+
+.form-group {
+  margin-bottom: 15px;
+}
+
+.form-group label {
+  display: block;
+  font-weight: bold;
+  margin-bottom: 5px;
+}
+
+.form-group input[type="text"],
+.form-group input[type="number"],
+.form-group input[type="file"],
+.form-group select {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+.form-group input[type="text"]:focus,
+.form-group input[type="number"]:focus,
+.form-group input[type="file"]:focus,
+.form-group select:focus {
+  outline: none;
+  border-color: #007bff;
+}
+
+.form-group select {
+  height: 40px;
+}
+
+.form-buttons {
+  display: flex;
+  justify-content: space-between;
+}
+
+.save-button,
+.cancel-button {
+  padding: 10px 20px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+.save-button {
+  background-color: #28a745;
+  color: white;
+}
+
+.save-button:hover {
+  background-color: #218838;
+}
+
+.cancel-button {
+  background-color: #dc3545;
+  color: white;
+}
+
+.cancel-button:hover {
+  background-color: #c82333;
+}

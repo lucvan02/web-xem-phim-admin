@@ -20,7 +20,7 @@ const ManageEpisodes = () => {
   const [uploadProgress, setUploadProgress] = useState(0);
   const [message, setMessage] = useState('');
   const [isUploading, setIsUploading] = useState(false);
-
+  const [isAddingEpisode, setIsAddingEpisode] = useState(false);
 
   useEffect(() => {
     fetchEpisodes();
@@ -45,6 +45,7 @@ const ManageEpisodes = () => {
 
       fetchEpisodes();
       resetNewEpisode();
+      setIsAddingEpisode(false);
       setMessage('Tập phim đã được thêm thành công!');
     } catch (error) {
       console.error('Error adding episode:', error);
@@ -66,7 +67,6 @@ const ManageEpisodes = () => {
   };
 
   const handleEditEpisode = (episode) => {
-
     setEditEpisode(episode);
   };
 
@@ -105,30 +105,6 @@ const ManageEpisodes = () => {
     }
   };
   
-
-  // const uploadVideo = async (episodeId) => {
-  //   try {
-  //     setIsUploading(true);  // Bắt đầu quá trình tải lên
-  //     const formData = new FormData();
-  //     formData.append('fileUpload', newVideo);
-  //     formData.append('id', episodeId);
-  
-  //     await uploadEpisodeVideo(formData, (event) => {
-  //       const progress = Math.round((event.loaded * 100) / event.total);
-  //       setUploadProgress(progress);
-  //     });
-  
-  //     console.log('Video uploaded successfully');
-  //     setMessage('Video đã được upload thành công!');
-  //   } catch (error) {
-  //     console.error('Error uploading video:', error);
-  //     setMessage('Có lỗi xảy ra khi upload video.');
-  //   } finally {
-  //     setIsUploading(false);  // Kết thúc quá trình tải lên
-  //   }
-  // };
-  
-
   const handleSaveEdit = async () => {
     try {
       const updatedData = {
@@ -158,79 +134,82 @@ const ManageEpisodes = () => {
     }
   };
 
+  const handleCancelEdit = () => {
+    setEditEpisode(null);
+    setNewVideo(null);
+  };
+
   return (
     <div className='main-content-epi'>
-           
-      <div className="form-container">
-        <h2>Thêm tập phim</h2>
-        <div className="form-group">
-          <input
-            type="text"
-            placeholder="Tên"
-            value={newEpisode.name}
-            onChange={(e) => setNewEpisode({ ...newEpisode, name: e.target.value })}
-          />
-        </div>
-        <div className="form-group">
-          <input
-            type="number"
-            placeholder="Tập"
-            value={newEpisode.episode}
-            onChange={(e) => setNewEpisode({ ...newEpisode, episode: e.target.value })}
-          />
-        </div>
-        <div className="form-group">
-          <input
-            type="text"
-            placeholder="Link"
-            value={newEpisode.link}
-            onChange={(e) => setNewEpisode({ ...newEpisode, link: e.target.value })}
-          />
-        </div>
-        <div className="form-group">
-          <input
-            type="text"
-            placeholder="Mùa"
-            value={newEpisode.season}
-            onChange={(e) => setNewEpisode({ ...newEpisode, season: e.target.value })}
-          />
-        </div>
-        <div className="form-group">
-          <input
-            type="date"
-            placeholder="Ngày chỉnh sửa"
-            value={newEpisode.daySubmit}
-            onChange={(e) => setNewEpisode({ ...newEpisode, daySubmit: e.target.value })}
-          />
-        </div>
-        <div className="form-group">
-          <input
-            type="file"
-            onChange={(e) => setNewVideo(e.target.files[0])}
-          />
-        </div>
-        <button onClick={handleAddEpisode}>Thêm</button>
-      </div>
+      
 
-
+      {isAddingEpisode && (
+        <div className="form-container">
+          <h2>Thêm tập phim</h2>
+          <div className="form-group">
+            <input
+              type="text"
+              placeholder="Tên"
+              value={newEpisode.name}
+              onChange={(e) => setNewEpisode({ ...newEpisode, name: e.target.value })}
+            />
+          </div>
+          <div className="form-group">
+            <input
+              type="number"
+              placeholder="Tập"
+              value={newEpisode.episode}
+              onChange={(e) => setNewEpisode({ ...newEpisode, episode: e.target.value })}
+            />
+          </div>
+          <div className="form-group">
+            <input
+              type="text"
+              placeholder="Link"
+              value={newEpisode.link}
+              onChange={(e) => setNewEpisode({ ...newEpisode, link: e.target.value })}
+            />
+          </div>
+          <div className="form-group">
+            <input
+              type="text"
+              placeholder="Mùa"
+              value={newEpisode.season}
+              onChange={(e) => setNewEpisode({ ...newEpisode, season: e.target.value })}
+            />
+          </div>
+          <div className="form-group">
+            <input
+              type="date"
+              placeholder="Ngày chỉnh sửa"
+              value={newEpisode.daySubmit}
+              onChange={(e) => setNewEpisode({ ...newEpisode, daySubmit: e.target.value })}
+            />
+          </div>
+          <div className="form-group">
+            <input
+              type="file"
+              onChange={(e) => setNewVideo(e.target.files[0])}
+            />
+          </div>
+          <button onClick={handleAddEpisode}>Thêm</button>
+          <button onClick={() => setIsAddingEpisode(false)}>Hủy</button>
+        </div>
+      )}
 
       {message && <div className="message">{message}</div>} 
       {isUploading && <div className="spinner"></div>}
-      
-      {/* {message && <div className="message">{message}</div>}
-    {isUploading && (
-      <div className="progress-container">
-        <div className="progress-bar">
-          <div className="progress" style={{ width: `${uploadProgress}%` }}></div>
+      {/* {isUploading && (
+        <div className="progress-container">
+          <div className="progress-bar">
+            <div className="progress" style={{ width: `${uploadProgress}%` }}></div>
+          </div>
+          <div className="progress-text">{uploadProgress}%</div>
         </div>
-        <div className="progress-text">{uploadProgress}%</div>
-      </div>
-    )} */}
-
-
+      )} */}
 
       <div className="episodes-list">
-        <h2>Danh sách tập phim</h2>
+        <h3>Danh sách tập phim<button onClick={() => setIsAddingEpisode(true)}>Thêm tập</button></h3>
         <table className='bangTapPhim'>
           <thead>
             <tr>
@@ -258,65 +237,65 @@ const ManageEpisodes = () => {
                 </td>
               </tr>
             ))}
-            {editEpisode && (
-              <tr>
-                <td colSpan="7">
-                  <div className="form-container">
-                    <h2>Chỉnh sửa tập phim</h2>
-                    <div className="form-group">
-                      <input
-                        type="text"
-                        placeholder="Tên"
-                        value={editEpisode.name}
-                        onChange={(e) => setEditEpisode({ ...editEpisode, name: e.target.value })}
-                      />
-                    </div>
-                    <div className="form-group">
-                      <input
-                        type="number"
-                        placeholder="Tập"
-                        value={editEpisode.episode}
-                        onChange={(e) => setEditEpisode({ ...editEpisode, episode: e.target.value })}
-                      />
-                    </div>
-                    <div className="form-group">
-                      <input
-                        type="text"
-                        placeholder="Link"
-                        value={editEpisode.link}
-                        onChange={(e) => setEditEpisode({ ...editEpisode, link: e.target.value })}
-                      />
-                    </div>
-                    <div className="form-group">
-                      <input
-                        type="text"
-                        placeholder="Mùa"
-                        value={editEpisode.season}
-                        onChange={(e) => setEditEpisode({ ...editEpisode, season: e.target.value })}
-                      />
-                    </div>
-                    <div className="form-group">
-                      <input
-                        type="date"
-                        placeholder="Ngày chỉnh sửa"
-                        value={editEpisode.daySubmit}
-                        onChange={(e) => setEditEpisode({ ...editEpisode, daySubmit: e.target.value })}
-                      />
-                    </div>
-                    <div className="form-group">
-                      <input
-                        type="file"
-                        onChange={(e) => setNewVideo(e.target.files[0])}
-                      />
-                    </div>
-                    <button onClick={handleSaveEdit}>Lưu</button>
-                  </div>
-                </td>
-              </tr>
-            )}
           </tbody>
         </table>
       </div>
+
+      {editEpisode && (
+        <div className="edit-form-container">
+          <h2>Chỉnh sửa tập phim</h2>
+          <div className="form-group">
+            <input
+              type="text"
+              placeholder="Tên"
+              value={editEpisode.name}
+              onChange={(e) => setEditEpisode({ ...editEpisode, name: e.target.value })}
+            />
+          </div>
+          <div className="form-group">
+            <input
+              type="number"
+              placeholder="Tập"
+              value={editEpisode.episode}
+              onChange={(e) => setEditEpisode({ ...editEpisode, episode: e.target.value })}
+            />
+          </div>
+          <div className="form-group">
+            <input
+              type="text"
+              placeholder="Link"
+              value={editEpisode.link}
+              onChange={(e) => setEditEpisode({ ...editEpisode, link: e.target.value })}
+            />
+          </div>
+          <div className="form-group">
+            <input
+              type="text"
+              placeholder="Mùa"
+              value={editEpisode.season}
+              onChange={(e) => setEditEpisode({ ...editEpisode, season: e.target.value })}
+            />
+          </div>
+          <div className="form-group">
+            <input
+              type="date"
+              placeholder="Ngày chỉnh sửa"
+              value={editEpisode.daySubmit}
+              onChange={(e) => setEditEpisode({ ...editEpisode, daySubmit: e.target.value })}
+            />
+          </div>
+          <div className="form-group">
+            <input
+              type="file"
+              onChange={(e) => setNewVideo(e.target.files[0])}
+            />
+          </div>
+          <div className="button-group">
+            <button onClick={handleSaveEdit}>Lưu</button>
+            <button onClick={handleCancelEdit}>Hủy</button>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

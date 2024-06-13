@@ -2,13 +2,15 @@
   .main-content {
     margin-left: 250px; /* Same width as the sidebar */
     padding: 20px;
-    /* background-color: #888; */
+    /* background-color: #bdbfc575; */
   }
   
   /* Style for the table */
   table {
     width: 100%;
     border-collapse: collapse;
+    background: #dcdccc;
+    font-weight: 500;
   }
   
   /* Style for table header */
@@ -132,10 +134,12 @@ th {
 }
 
 td {
-  border: 1px solid #ddd;
-  padding: 10px;
+  border: 1.5px solid #000;
+  /* padding: 10px; */
 }
 
 
 
-  
+
+
+

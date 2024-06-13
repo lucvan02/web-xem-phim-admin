@@ -4,7 +4,6 @@ import { getMovieDetail, updateMovie, getAllCountries, getAllPersons, getAllCate
 import './EditMovie.css';
 import Sidebar from './Sidebar';
 import ManageEpisodes from './ManageEpisodes';
-import { Button } from 'bootstrap';
 
 const EditMovie = () => {
   const { movieId } = useParams();
@@ -113,6 +112,7 @@ const EditMovie = () => {
       const updatedData = {
         movieId: movieId,
         name: formData.name,
+        image: newImage ? newImage.name : formData.image,
         episodes: formData.episodes,
         movieSchedule: formData.movieSchedule,
         countryId: formData.country,
@@ -205,71 +205,62 @@ const EditMovie = () => {
           ))}
         </div>
       </div>
-        <button onClick={handleEditToggle}>{editMode ? 'Huỷ' : 'Sửa'}</button>
-        {editMode && (
-          <form onSubmit={handleSubmit}>
-            <div className="form-group">
-              <label htmlFor="name">Name:</label>
-              <input type="text" id="name" value={formData.name} onChange={(e) => setFormData({ ...formData, name: e.target.value })} />
-            </div>
+      <button onClick={handleEditToggle}>{editMode ? 'Huỷ' : 'Sửa'}</button>
+{editMode && (
+  <div className='edit-form-container'>
+    <form onSubmit={handleSubmit} className="edit-form">
+      <div className="form-group">
+        <label htmlFor="name">Name:</label>
+        <input type="text" id="name" value={formData.name} onChange={(e) => setFormData({ ...formData, name: e.target.value })} />
+      </div>
+      <div className="form-group">
+        <label>Chọn ảnh</label>
+        <input type="file" onChange={handleImageChange} />
+      </div>
+      <div className="form-group">
+        <label htmlFor="episodes">Số tập:</label>
+        <input type="number" id="episodes" value={formData.episodes} onChange={(e) => setFormData({ ...formData, episodes: e.target.value })} />
+      </div>
+      <div className="form-group">
+        <label htmlFor="movieSchedule">Năm:</label>
+        <input type="text" id="movieSchedule" value={formData.movieSchedule} onChange={(e) => setFormData({ ...formData, movieSchedule: e.target.value })} />
+      </div>
+      <div className="form-group">
+        <label htmlFor="country">Quốc gia:</label>
+        <select value={formData.country} onChange={(e) => setFormData({ ...formData, country: e.target.value })}>
+          {countries.map(country => (
+            <option key={country.countryId} value={country.countryId}>{country.name}</option>
+          ))}
+        </select>
+      </div>
+      <div className="form-group">
+        <label htmlFor="price">Giá:</label>
+        <input type="number" id="price" value={formData.price} onChange={(e) => setFormData({ ...formData, price: e.target.value })} />
+      </div>
+      <div className="form-group">
+        <label htmlFor="categories">Thể loại:</label>
+        <select value={formData.categories} onChange={(e) => setFormData({ ...formData, categories: Array.from(e.target.selectedOptions, option => parseInt(option.value)) })} multiple={true}>
+          {categories.map(category => (
+            <option key={category.categoryId} value={category.categoryId}>{category.name}</option>
+          ))}
+        </select>
+      </div>
+      <div className="form-group">
+        <label htmlFor="persons">Diễn viên:</label>
+        <select value={formData.persons} onChange={(e) => setFormData({ ...formData, persons: Array.from(e.target.selectedOptions, option => parseInt(option.value)) })} multiple={true}>
+          {persons.map(person => (
+            <option key={person.personId} value={person.personId}>{person.name}</option>
+          ))}
+        </select>
+      </div>
+      <div className="form-buttons">
+        <button type="submit" className="save-button">Lưu</button>
+        <button type="button" className="cancel-button" onClick={handleEditToggle}>Huỷ</button>
+      </div>
+    </form>
+  </div>
+)}
 
-            <div className="form-group">
-              <label>Chọn ảnh</label>
-              <input
-                type="file"
-                onChange={handleImageChange}
-              />
-          </div>
-            <div className="form-group">
-              <label htmlFor="episodes">Số tập:</label>
-              <input type="number" id="episodes" value={formData.episodes} onChange={(e) => setFormData({ ...formData, episodes: e.target.value })} />
-            </div>
-            <div className="form-group">
-              <label htmlFor="movieSchedule">Năm:</label>
-              <input type="text" id="movieSchedule" value={formData.movieSchedule} onChange={(e) => setFormData({ ...formData, movieSchedule: e.target.value })} />
-            </div>
-            <div className="form-group">
-              <label htmlFor="country">Quốc gia:</label>
-              <select
-                value={formData.country}
-                onChange={(e) => setFormData({ ...formData, country: e.target.value })}
-              >
-                {countries.map(country => (
-                  <option key={country.countryId} value={country.countryId}>{country.name}</option>
-                ))}
-              </select>
-            </div>
-            <div className="form-group">
-              <label htmlFor="price">Giá:</label>
-              <input type="number" id="price" value={formData.price} onChange={(e) => setFormData({ ...formData, price: e.target.value })} />
-            </div>
-            <div className="form-group">
-              <label htmlFor="categories">Thể loại:</label>
-              <select
-                value={formData.categories}
-                onChange={(e) => setFormData({ ...formData, categories: Array.from(e.target.selectedOptions, option => parseInt(option.value)) })}
-                multiple={true}
-              >
-                {categories.map(category => (
-                  <option key={category.categoryId} value={category.categoryId}>{category.name}</option>
-                ))}
-              </select>
-            </div>
-            <div className="form-group">
-              <label htmlFor="persons">Diễn viên:</label>
-              <select
-                value={formData.persons}
-                onChange={(e) => setFormData({ ...formData, persons: Array.from(e.target.selectedOptions, option => parseInt(option.value)) })}
-                multiple={true}
-              >
-                {persons.map(person => (
-                  <option key={person.personId} value={person.personId}>{person.name}</option>
-                ))}
-              </select>
-            </div>
-            <button type="submit">Lưu</button>
-          </form>
-        )}
 
         <ManageEpisodes />
       </div>
